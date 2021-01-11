@@ -1,12 +1,24 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 import './Login.css';
 
-function Login() {    
+function Login( props ) {    
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [flag, setFlag] = useState(true);
-    
+   const [users, setUsers] = useState([]);
+   const users1 = [
+       {name: 'albert', id:18},
+      {name: 'dudu', id: 19}
+   ]
+
+   // before render
+   useEffect(() => {
+       // call to back-end for data for specific user with email
+       // set users to new data
+       setUsers(users1); 
+       console.log('Props', props)
+  }, []);
 
     const clickHandler = (e) => {
         e.preventDefault();
@@ -24,6 +36,15 @@ function Login() {
             {flag && (
                 <p>Hello</p>
             )}  
+
+        {users.map(u=> (
+            <div key={u.id}>
+                {u.name}
+                <br></br>
+                {u.id}
+            </div>
+        ))}
+
         <form>
             <h3>Login</h3>
             <label>
