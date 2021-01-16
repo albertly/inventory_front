@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 import './Login.css';
 
@@ -25,6 +26,22 @@ function Login( props ) {
         
         console.log('email', email);
         console.log('password', password);
+        debugger;
+        try {
+        axios.post('https://localhost:5001/Auth/Login', {
+            eMail: email,
+            password
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+        }
+        catch(err) {
+            console.log(err);
+        }
 
     }
 
