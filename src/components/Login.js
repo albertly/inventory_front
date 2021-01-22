@@ -1,13 +1,16 @@
 import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 
-import {ContextMain} from '../shared/context';
+import {ContextMain, setToken} from '../shared/context';
 
 import './Login.css';
 
 function Login( {name, setName} ) {    
+   let history = useHistory(); 
    const {state, dispatch } = useContext(ContextMain); 
    const [email, setEmail] = useState('');
+   const [error, setError] = useState(false);
    const [password, setPassword] = useState('');
    const [flag, setFlag] = useState(true);
    const [users, setUsers] = useState([]);
@@ -22,7 +25,7 @@ function Login( {name, setName} ) {
        // set users to new data
        setUsers(users1); 
        
-  }, []);
+  }, [users, users1]);
 
     const clickHandler = (e) => {
         e.preventDefault();
@@ -35,11 +38,15 @@ function Login( {name, setName} ) {
             eMail: email,
             password
           })
-          .then(function (response) {
+          .then(function (response) {              
             console.log(response);
+            setToken(dispatch, response.data);
+            setError(false);
+            history.push("/");
           })
           .catch(function (error) {
             console.log(error);
+            setError(true);
           })
         }
         catch(err) {
@@ -82,6 +89,9 @@ function Login( {name, setName} ) {
             Submit
             </button>
         </form>
+        {error && (
+            <p>Invalid Credentials</p>
+        )}
         </div>
         </>
     );

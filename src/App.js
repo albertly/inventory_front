@@ -10,6 +10,7 @@ import Header from './components/Header';
 import Login from './components/Login';
 import About from './components/About';
 import Home from './components/Home';
+import GenericNotFound from './components/GenericNotFound';
 
 import {ContextProvider} from './shared/context';
 
@@ -30,10 +31,15 @@ function App() {
             <Route exact path="/">
               <Home />
             </Route>
+
+            {/* <Route exact path="/account">
+              <Home />
+            </Route> */}
+
             <Route path="/login">
               <Login name={stam} setName={setStam} />
             </Route>
-
+            <Route component={GenericNotFound} />
           </Switch>
           </ContextProvider>
       </Router>

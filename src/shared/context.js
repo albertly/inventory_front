@@ -1,11 +1,12 @@
 import React, { useReducer} from 'react';
+import jwt_decode from "jwt-decode";
 
 const SET_TOKEN = 'SET_TOKEN';
 const CLEAR_TOKEN = 'CLEAR_TOKEN';
 
 const ContextMain = React.createContext();
 
-const initialState = { token: 'albert_token', anotherValue: ''};
+const initialState = { token: '', anotherValue: ''};
 
 const reducer = (state, action) => {
     switch(action.type) {
@@ -35,9 +36,23 @@ const setToken = (dispatch, token) => {
     dispatch({ type: SET_TOKEN, payload: token });
 }
 
+const getRole = (state) => {    
+    
+    if (state.token) {
+        const decoded = jwt_decode(state.token);
+        console.log('decoded', decoded);
+        if (decoded.email === 'albert.lyubarsky@gmail.com') {
+            return 'Admin';
+        }        
+    }
+
+    return 'User';
+}
+
 export {
     ContextMain,
     ContextProvider,
     setToken,
-    clearToken 
+    clearToken,
+    getRole 
 }

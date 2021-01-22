@@ -1,9 +1,26 @@
-import {  Link } from "react-router-dom";
+import {useContext, useEffect, useState} from 'react'
+import {  Link } from 'react-router-dom';
+
+import {ContextMain, getRole} from '../shared/context';
+
 function Header({name}) {
+    const {state, dispatch } = useContext(ContextMain); 
     const ulStyle = {
                      display:"flex",
                      justifyContent: "space-around"
                     };
+   
+    const [role, setRole] = useState('');
+   
+    const logInOrOut = () => {      
+      debugger;      
+      return <Link to={state.token ? '/logout' : '/login'}> {state.token ? 'Logout' : 'Login'} </Link>
+    } 
+
+    useEffect(() => {
+      setRole(getRole(state));
+    }, [state, role] )
+
     return (
       <div>
         <div>{name}</div>
@@ -12,11 +29,16 @@ function Header({name}) {
             <li>
               <Link to="/">Home</Link>
             </li>
+
+            {/* <li>
+              <Link to="/account">Account</Link>
+            </li> */}
+
             <li>
               <Link to="/about">About</Link>
             </li>
             <li>
-              <Link to="/login">Login</Link>
+              {logInOrOut()}
             </li>
           </ul>
         </nav>
