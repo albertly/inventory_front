@@ -1,9 +1,12 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+
+import {ContextMain} from '../shared/context';
 
 import './Login.css';
 
-function Login( props ) {    
+function Login( {name, setName} ) {    
+   const {state, dispatch } = useContext(ContextMain); 
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [flag, setFlag] = useState(true);
@@ -18,7 +21,7 @@ function Login( props ) {
        // call to back-end for data for specific user with email
        // set users to new data
        setUsers(users1); 
-       console.log('Props', props)
+       
   }, []);
 
     const clickHandler = (e) => {
@@ -49,6 +52,9 @@ function Login( props ) {
     const changeHandlerPassword = e => setPassword(e.target.value);
 
      return (
+        <> 
+        <div>{state.token}</div> 
+        <div><button onClick={() => setName('Dudi')}>Set Name</button> </div>
         <div>
             {flag && (
                 <p>Hello</p>
@@ -77,6 +83,7 @@ function Login( props ) {
             </button>
         </form>
         </div>
+        </>
     );
 
 

@@ -1,11 +1,12 @@
 import {  Link } from "react-router-dom";
-function Header() {
+function Header({name}) {
     const ulStyle = {
                      display:"flex",
                      justifyContent: "space-around"
                     };
     return (
       <div>
+        <div>{name}</div>
         <nav style={{width: "50%"}}>
           <ul style={ulStyle}>
             <li>
