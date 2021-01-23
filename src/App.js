@@ -2,46 +2,60 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Redirect
 } from "react-router-dom";
 
-import {useState} from 'react'
+import axios from 'axios';
+
+import { Container } from '@material-ui/core';
+
+import {useContext} from 'react'
 import Header from './components/Header';
 import Login from './components/Login';
 import About from './components/About';
 import Home from './components/Home';
 import GenericNotFound from './components/GenericNotFound';
 
-import {ContextProvider} from './shared/context';
+import {ContextMain, getRole} from './shared/context';
 
 function App() {
+  const {state, dispatch } = useContext(ContextMain);   
 
-  const [stam, setStam] = useState("albert");
-  
+  axios.defaults.baseURL = process.env.REACT_APP_REST_API;
+
   return (
       
       <Router>
-        <ContextProvider> 
-        <Header name={stam}/>
-        
-        <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route exact path="/">
-              <Home />
-            </Route>
 
-            {/* <Route exact path="/account">
-              <Home />
-            </Route> */}
+        <Container>
+          <Header/>
+          
+          <Switch>
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route exact path="/" render={
 
-            <Route path="/login">
-              <Login name={stam} setName={setStam} />
-            </Route>
-            <Route component={GenericNotFound} />
-          </Switch>
-          </ContextProvider>
+                () => ( getRole(state) ? 
+                  <Home /> :
+                  <Redirect to='/login' />              
+                )
+
+                }
+              >
+
+              </Route>
+
+              {/* <Route exact path="/account">
+                <Home />
+              </Route> */}
+
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route component={GenericNotFound} />
+            </Switch>
+          </Container>  
       </Router>
   );
 }

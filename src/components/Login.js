@@ -1,12 +1,34 @@
 import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+
 import { useHistory } from "react-router-dom";
 
 import {ContextMain, setToken} from '../shared/context';
 
-import './Login.css';
+//import './Login.css';
 
-function Login( {name, setName} ) {    
+const useStyles = makeStyles((theme) => ({
+    root: {
+      '& > *': {
+        margin: '50px auto',
+        width: '25ch',
+      },
+    textField: {
+        width: '25ch',
+      }, 
+    margin: {
+        margin: theme.spacing(1),
+      },  
+    },
+  }));
+
+function Login() {    
+   const classes = useStyles(); 
    let history = useHistory(); 
    const {state, dispatch } = useContext(ContextMain); 
    const [email, setEmail] = useState('');
@@ -14,68 +36,58 @@ function Login( {name, setName} ) {
    const [password, setPassword] = useState('');
    const [flag, setFlag] = useState(true);
    const [users, setUsers] = useState([]);
-   const users1 = [
-       {name: 'albert', id:18},
-      {name: 'dudu', id: 19}
-   ]
 
-   // before render
-   useEffect(() => {
-       // call to back-end for data for specific user with email
-       // set users to new data
-       setUsers(users1); 
-       
-  }, [users, users1]);
 
     const clickHandler = (e) => {
         e.preventDefault();
         
-        console.log('email', email);
-        console.log('password', password);
-        debugger;
-        try {
-        axios.post('https://localhost:5001/Auth/Login', {
+        axios.post('/Auth/Login', {
             eMail: email,
             password
           })
           .then(function (response) {              
             console.log(response);
             setToken(dispatch, response.data);
-            setError(false);
+            setError(false);            
             history.push("/");
           })
           .catch(function (error) {
             console.log(error);
             setError(true);
           })
-        }
-        catch(err) {
-            console.log(err);
-        }
 
     }
 
     const changeHandlerEmail = e => setEmail(e.target.value);
     const changeHandlerPassword = e => setPassword(e.target.value);
 
+
      return (
         <> 
-        <div>{state.token}</div> 
-        <div><button onClick={() => setName('Dudi')}>Set Name</button> </div>
+    
+
+    <form className={classes.root}  noValidate autoComplete="off" >
         <div>
-            {flag && (
-                <p>Hello</p>
-            )}  
+            <FormControl className={clsx(classes.margin,  classes.textField)}>  
+                             <TextField name="email" id="email" value={email} label="Email address" onChange={changeHandlerEmail} />
+            </FormControl>    
+        </div>
+        <div>
+        <FormControl className={clsx(classes.margin,  classes.textField)}>  
+            <TextField name="password" id="password"  value={password} label="Password" onChange={changeHandlerPassword} />
+        </FormControl> 
+        </div>
+        <div>
+      <button type="submit" className="myborder" onClick={clickHandler}> 
+            Submit
+       </button>
+       {error && (
+            <p>Invalid Credentials</p>
+        )}  
+       </div>
+    </form>
 
-        {users.map(u=> (
-            <div key={u.id}>
-                {u.name}
-                <br></br>
-                {u.id}
-            </div>
-        ))}
-
-        <form>
+        {/* <form>
             <h3>Login</h3>
             <label>
             Email address
@@ -91,8 +103,7 @@ function Login( {name, setName} ) {
         </form>
         {error && (
             <p>Invalid Credentials</p>
-        )}
-        </div>
+        )}         */}
         </>
     );
 

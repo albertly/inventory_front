@@ -37,16 +37,17 @@ const setToken = (dispatch, token) => {
 }
 
 const getRole = (state) => {    
-    
-    if (state.token) {
-        const decoded = jwt_decode(state.token);
-        console.log('decoded', decoded);
+    if (state?.token) {
+        const decoded = jwt_decode(state.token);       
         if (decoded.email === 'albert.lyubarsky@gmail.com') {
             return 'Admin';
         }        
+        else {
+            return 'User';
+        }
     }
 
-    return 'User';
+    return '';
 }
 
 export {
